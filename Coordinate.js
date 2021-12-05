@@ -3,7 +3,7 @@ const defaults = {
         unit: 1,// step
         max: 10,// max step
         interval: 20, // pixel value per unit
-        height: 10, // unit height
+        height: .3, // unit height
         color: "blue",
     },
     text: {
@@ -40,8 +40,11 @@ Coordinate.prototype.goToOrigin = function (context) {
 Coordinate.prototype.drawLine = function (context, from, to, options) {
     const color = options && options.color || this.options.axis.color;
     context.beginPath();
-    context.moveTo(from.x, -from.y);
-    context.lineTo(to.x, -to.y);
+    // context.moveTo(from.x, -from.y);
+    // context.lineTo(to.x, -to.y);
+
+    context.moveTo(this.getX(from.x), this.getY(from.y));
+    context.lineTo(this.getX(to.x), this.getY(to.y));
     context.strokeStyle = color;
     context.stroke();
 }
@@ -64,13 +67,13 @@ Coordinate.prototype.drawAxis = function (context) {
     const max = axis.max;
     for (let i = -max + 1; i < max; i++) {
         // draw x grid
-        this.drawLine(context, {x: this.getX(i), y: axis.height}, {x: this.getX(i), y: 0});
+        this.drawLine(context, {x: i, y: axis.height}, {x: i, y: 0});
         // draw x label
         this.drawText(context, i, {x: this.getX(i), y: -text.offset}, {alignment: i == 0 ? 'start' : 'center'});
         // draw y grid
-        this.drawLine(context, {x: 0, y: this.getY(i)}, {x: axis.height, y: this.getY(i)});
+        this.drawLine(context, {x: 0, y: i}, {x: axis.height, y: i});
         // draw y label
-        this.drawText(context, i, {x: -text.offset, y: this.getY(i)});
+        this.drawText(context, -i, {x: -text.offset, y: this.getY(i)});
     }
 }
 Coordinate.prototype.getX = function (x) {

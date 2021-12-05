@@ -1,89 +1,92 @@
 const canvas = document.getElementById("canvas");
 canvas.width = 500;
 canvas.height = 500;
-
 const ctx = canvas.getContext("2d");
-
-const coordinate = new Coordinate(canvas.width, canvas.height);
-const interval = canvas.width / 20;
-coordinate.setOptions('axis', {interval});
-
-function random(min, max) {
-    return Math.random() * (max - min) + min;
+const weights = {
+    x: Math.random(),
+    y: Math.random(),
 }
 
-function generatePoints(target, amount, range) {
+function generatePoints(amount) {
     const points = [];
     for (let i = 0; i < amount; i++) {
-        const x = random(target.x - range, target.x + range);
-        const y = random(target.y - range, target.y + range);
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const label = x > y ? 1 : -1;
         points.push({
             x: x,
-            y: y
+            y: y,
+            label: label
         });
     }
     return points;
 }
 
-let target = {
-    x: random(-7, 7),
-    y: random(-7, 7)
-};
-let trainingData = generatePoints(target, 50, 3);
-var model = {
-    x: 10 * 2 * (0.5 - Math.random()),
-    y: 10 * 2 * (0.5 - Math.random())
-};
+let points = generatePoints(100);
+
+function activation(n) {
+    return n > 0 ? 1 : -1;
+}
+
+function predict(point) {
+    const sum = point.x * weights.x + point.y * weights.y;
+    return activation(sum);
+}
 
 function handleClick(event) {
-    const clientRect = canvas.getBoundingClientRect();
-    const x = event.clientX - clientRect.left;
-    const y = event.clientY - clientRect.top;
+    const bound = canvas.getBoundingClientRect();
+    const x = event.clientX - bound.left;
+    const y = event.clientY - bound.top;
     target = {
-        x: coordinate.pixelX(x),
-        y: coordinate.pixelY(y)
+        x: x,
+        y: y
     };
-    trainingData = generatePoints(target, 50, 3);
+    points = generatePoints(100);
 }
 
 canvas.addEventListener("click", handleClick);
-var learningRate = 0.01;
-var dataIndex = 0;
+const learningRate = 0.0001;
 
-function learning(output, labeled) {
-    var dE_dX = (labeled.x - output.x) * -1;
-    var dE_dY = (labeled.y - output.y) * -1;
-    var gradientX = dE_dX;
-    var gradientY = dE_dY;
-    model.x += learningRate * -gradientX;
-    model.y += learningRate * -gradientY;
-    return model;
+function train(input, label) {
+    const output = predict(input);
+    const error = label - output;
+    weights.x += input.x * error * learningRate;
+    weights.y += input.y * error * learningRate;
 }
 
+let index = 0;
+
 function training() {
-    dataIndex++;
-    dataIndex = dataIndex >= trainingData.length ? 0 : dataIndex;
-    model = learning(model, trainingData[dataIndex]);
+    index++;
+    if (index >= points.length) {
+        index = 0;
+    }
+    const point = points[index];
+    train(point, point.label);
 }
 
 function draw() {
-    // draw coordinate
-    ctx.save();
     ctx.fillStyle = "rgba(255,255,255,0.3)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    coordinate.goToOrigin(ctx);
-    coordinate.drawAxis(ctx);
-    for (let i = 0; i < trainingData.length; i++) {
-        coordinate.drawPoint(ctx, trainingData[i], {
-            type: "stroke",
-        });
+    //draw line
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.stroke();
+    // draw the points
+    for (let i = 0; i < points.length; i++) {
+        const point = points[i];
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = "rgb(255,0,0)";
+        const output = predict(point);
+        if (output === 1) {
+            ctx.fillStyle = "rgb(0,0,255)";
+        } else {
+            ctx.fillStyle = "rgb(255,0,0)";
+        }
+        ctx.fill();
     }
-    // draw model
-    coordinate.drawPoint(ctx, model, {
-        type: "fill",
-        color: "red"
-    });
-    ctx.restore();
     training();
     requestAnimationFrame(draw);
 }
