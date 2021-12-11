@@ -1,0 +1,22 @@
+{
+  "name": "machine-learning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Coordinate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/francojohnc/machine-learning.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/francojohnc/machine-learning/issues"
+  },
+  "homepage": "https://github.com/francojohnc/machine-learning#readme",
+  "devDependencies": {
+    "jasmine": "^3.10.0"
+  }
+}

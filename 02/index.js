@@ -8,58 +8,51 @@ const coordinate = new Coordinate(canvas.width, canvas.height);
 const interval = canvas.width / 20;
 coordinate.setOptions('axis', {interval});
 
-function random(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
-function generatePoints(target, amount, range) {
-    const points = [];
-    for (let i = 0; i < amount; i++) {
-        const x = random(target.x - range, target.x + range);
-        const y = random(target.y - range, target.y + range);
-        points.push({
-            x: x,
-            y: y
-        });
-    }
-    return points;
-}
-
-let target = {
-    x: random(-7, 7),
-    y: random(-7, 7)
-};
-let points = generatePoints(target, 50, 3);
-let model = {
-    x: random(-8, 8),
-    y: random(-8, 8)
-};
-let learningRate = 0.01;
-let index = 0;
+const points = [];
 
 function handleClick(event) {
     const bound = canvas.getBoundingClientRect();
     const x = event.clientX - bound.left;
     const y = event.clientY - bound.top;
-    target = {
+    const point = {
         x: coordinate.pixelX(x),
         y: coordinate.pixelY(y)
     };
-    points = generatePoints(target, 50, 3);
+    points.push(point);
 }
 
 canvas.addEventListener("click", handleClick);
+let m = 0;
+let b = 0;
 
-function training() {
-    index++;
-    if (index >= points.length) {
-        index = 0;
+function f(x) {
+    return m * x + b;
+}
+
+// linear regression ordinary least squares
+// m = Σ(x-x')(y-y') / Σ(x-x')²
+// b = y' - mx'
+function linear() {
+    let xsum = 0;
+    let ysum = 0;
+    for (let p of points) {
+        let x = p.x;
+        let y = p.y;
+        xsum += x;
+        ysum += y;
     }
-    const point = points[index];
-    const errorX = point.x - model.x;
-    const errorY = point.y - model.y;
-    model.x += errorX * learningRate;
-    model.y += errorY * learningRate;
+    let xmean = xsum / points.length;//x average
+    let ymean = ysum / points.length;//y average
+    let num = 0;//numerator
+    let dem = 0;//denominator
+    for (let p of points) {
+        let x = p.x;
+        let y = p.y;
+        num += (x - xmean) * (y - ymean);
+        dem += (x - xmean) * (x - ymean);
+    }
+    m = num / dem;
+    b = ymean - m * xmean;
 }
 
 function draw() {
@@ -71,16 +64,17 @@ function draw() {
     coordinate.drawAxis(ctx);
     for (let i = 0; i < points.length; i++) {
         coordinate.drawPoint(ctx, points[i], {
-            type: "stroke",
+            type: "fill",
+            color: "red"
         });
     }
-    // draw model
-    coordinate.drawPoint(ctx, model, {
-        type: "fill",
-        color: "red"
-    });
+    const x1 = -10;
+    const y1 = f(x1);
+    const x2 = 10;
+    const y2 = f(x2);
+    coordinate.drawLine(ctx, {x: x1, y: y1}, {x: x2, y: y2}, {color: 'black'});
+    linear();
     ctx.restore();
-    training();
     requestAnimationFrame(draw);
 }
 
