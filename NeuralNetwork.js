@@ -38,9 +38,9 @@ class NeuralNetwork {
         return outputs[outputs.length - 1].toArray();
     }
 
-    // in the forward propagation add all result into array an pass into back propagation
-    // Δm = rate * x * error
-    // Δb = rate * error
+    // in the forward propagation add all result into array an used into back propagation
+    // Δw = output * error * rate * input
+    // Δb = output * error * rate
     train(inputs, targets, rate = 0.01) {
         const outputs = this.forward(inputs);
         const output = outputs[outputs.length - 1];
@@ -54,9 +54,9 @@ class NeuralNetwork {
             gradient.multiply(error);
             gradient.multiply(rate);
             const delta = Matrix.multiply(gradient, Matrix.transpose(input));
+            error = Matrix.multiply(Matrix.transpose(weight), error);
             weight.add(delta);
             bias.add(gradient);
-            error = Matrix.multiply(Matrix.transpose(weight), error);
         }
         return output.toArray();
     }

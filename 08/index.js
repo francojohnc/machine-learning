@@ -42,7 +42,7 @@ function draw() {
             const inputs = [x1, x2];
             const output = nn.predict(inputs);
             const color = output[0] * 255;
-            ctx.fillStyle = `rgba(${color},${color},${color},${color})`;
+            ctx.fillStyle = `rgb(${color},${color},${color})`;
             ctx.fillRect(i * resolution, j * resolution, resolution, resolution);
         }
     }

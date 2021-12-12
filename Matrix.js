@@ -67,7 +67,6 @@ class Matrix {
     static multiply(a, b) {
         // Matrix product
         if (a.cols !== b.rows) {
-            return;
             throw new Error('Columns of A must match rows of B.');
         }
         return new Matrix(a.rows, b.cols)
@@ -88,6 +87,15 @@ class Matrix {
         // Return a new Matrix a-b
         return new Matrix(a.rows, a.cols)
             .map((_, i, j) => a.data[i][j] - b.data[i][j]);
+    }
+
+    static add(a, b) {
+        if (a.rows !== b.rows || a.cols !== b.cols) {
+            throw new Error('Columns and Rows of A must match Columns and Rows of B.');
+        }
+        // Return a new Matrix a-b
+        return new Matrix(a.rows, a.cols)
+            .map((_, i, j) => a.data[i][j] + b.data[i][j]);
     }
 
     static transpose(matrix) {
