@@ -14,7 +14,8 @@ let train_index = 0;
 let test_index = 0;
 let total_tests = 0;
 let correct = 0;
-const nn = new NeuralNetwork([784, 32, 10]);
+let isDrawing = false;
+const nn = new NeuralNetwork([784, 10]);
 const size = 784;
 
 load().then(data => {
@@ -96,6 +97,7 @@ const handler = function (event) {
         case 'pointerup':
             canvas.removeEventListener('pointerup', handler);
             canvas.removeEventListener('pointermove', handler);
+            isDrawing = true;
             break;
         case 'pointermove':
             ctx.lineTo(x, y);
@@ -105,7 +107,15 @@ const handler = function (event) {
     }
 }
 
+function keydown(event) {
+    if (event.key === 'Backspace') {
+        drawing.getContext('2d').clearRect(0, 0, drawing.width, drawing.height);
+        isDrawing = false;
+    }
+}
+
 canvas.addEventListener('pointerdown', handler);
+document.addEventListener('keydown', keydown);
 
 function imageToCanvas(image) {
     const temp = document.createElement('canvas');
@@ -146,13 +156,6 @@ function guess() {
     predict_element.innerText = output;
 }
 
-function keydown(event) {
-    if (event.key === 'Backspace') {
-        drawing.getContext('2d').clearRect(0, 0, drawing.width, drawing.height);
-    }
-}
-
-document.addEventListener('keydown', keydown);
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -161,7 +164,11 @@ function draw() {
     }
     test();
     // draw digit
-    guess();
+    if (isDrawing) {
+        guess();
+    } else {
+        predict_element.innerText = '_';
+    }
     ctx.drawImage(drawing, 0, 0);
     // show actual data
     // const image = getDrawingPixel();
