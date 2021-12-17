@@ -26,7 +26,8 @@ const nn = new NeuralNetwork([2, 2, 1]);
 function training() {
     for (let i = 0; i < 10; i++) {
         const data = training_data[Math.floor(Math.random() * training_data.length)];
-        nn.train(data.inputs, data.outputs, 0.5);
+        const error = nn.train(data.inputs, data.outputs, 0.5);
+        // console.log(error);
     }
 }
 

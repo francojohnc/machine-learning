@@ -40,9 +40,6 @@ Coordinate.prototype.goToOrigin = function (context) {
 Coordinate.prototype.drawLine = function (context, from, to, options) {
     const color = options && options.color || this.options.axis.color;
     context.beginPath();
-    // context.moveTo(from.x, -from.y);
-    // context.lineTo(to.x, -to.y);
-
     context.moveTo(this.getX(from.x), this.getY(from.y));
     context.lineTo(this.getX(to.x), this.getY(to.y));
     context.strokeStyle = color;

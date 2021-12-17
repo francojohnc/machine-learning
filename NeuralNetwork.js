@@ -11,8 +11,8 @@ class NeuralNetwork {
             const output = layers[i];
             const weight = new Matrix(output, input);
             const bias = new Matrix(output, 1);
-            weight.random();
-            bias.random();
+            weight.random(-0.5, 0.5);
+            bias.random(-0.5, 0.5);
             this.weights.push(weight);
             this.biases.push(bias);
         }
@@ -58,7 +58,7 @@ class NeuralNetwork {
             weight.add(delta);
             bias.add(gradient);
         }
-        return output.toArray();
+        return error.toArray();
     }
 
     derivative(x) {

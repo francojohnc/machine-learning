@@ -54,16 +54,6 @@ class Matrix {
         return arr;
     }
 
-    copy() {
-        let m = new Matrix(this.rows, this.cols);
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.cols; j++) {
-                m.data[i][j] = this.data[i][j];
-            }
-        }
-        return m;
-    }
-
     static multiply(a, b) {
         // Matrix product
         if (a.cols !== b.rows) {
@@ -84,7 +74,6 @@ class Matrix {
         if (a.rows !== b.rows || a.cols !== b.cols) {
             throw new Error('Columns and Rows of A must match Columns and Rows of B.');
         }
-        // Return a new Matrix a-b
         return new Matrix(a.rows, a.cols)
             .map((_, i, j) => a.data[i][j] - b.data[i][j]);
     }
@@ -93,7 +82,6 @@ class Matrix {
         if (a.rows !== b.rows || a.cols !== b.cols) {
             throw new Error('Columns and Rows of A must match Columns and Rows of B.');
         }
-        // Return a new Matrix a-b
         return new Matrix(a.rows, a.cols)
             .map((_, i, j) => a.data[i][j] + b.data[i][j]);
     }

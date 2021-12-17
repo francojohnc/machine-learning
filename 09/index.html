@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            background: #DDDDDD;
+            margin: 0;
+            text-align: center
+        }
+
+        canvas {
+            background: white;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<h1>Handwritten digit recognition</h1>
+<h2>Draw a digit into a canvas press delete to clear a canvas</h2>
+<canvas id="canvas"></canvas>
+<p>Accuracy: <span id="percent">0.00%</span></p>
+<p>Guess: <span id="predict">_</span></p>
+
+<script src="../Matrix.js"></script>
+<script src="../NeuralNetwork.js"></script>
+<script src="data.js"></script>
+<script src="index.js"></script>
+
+</body>
+</html>
