@@ -4,6 +4,9 @@ const ctx = canvas.getContext("2d");
 const img = new Image();
 img.onload = onload;
 img.src = '../data/lena.jpg'
+
+// https://img.ly/blog/how-to-apply-filters-in-javascript/
+// https://www.youtube.com/watch?v=qPKsVAI_W6M
 function onload() {
     canvas.width = img.width * 2;
     canvas.height = img.height;
@@ -14,18 +17,22 @@ function onload() {
 
 // 2D array of filter
 // you can change value of the filter
+// let filter = [
+//     [-1, 1, 0],
+//     [-1, 1, 0],
+//     [-1, 1, 0]
+// ];
 const filter = [
     [1, 2],
     [-1, 0],
 ]
 
 function draw() {
-    // the image is vector
-    const image = ctx.getImageData(0, 0, img.width, img.height)
-    // output size
-    const output = new ImageData(image.width, image.height);
-    for (let y = 0; y < image.height; y++) {
-        for (let x = 0; x < image.width; x++) {
+    const image = ctx.getImageData(0, 0, img.width, img.height); // image data is 1D array
+    const stride = 2; // the number of pixels move the filter
+    const output = new ImageData(image.width, image.height); // the output image
+    for (let y = 0; y < image.height; y += stride) {
+        for (let x = 0; x < image.width; x += stride) {
             let sumR = 0;
             let sumG = 0;
             let sumB = 0;
@@ -39,7 +46,7 @@ function draw() {
                     sumB += image.data[channel + 2] * factor;
                 }
             }
-            const index = x + y * image.width;
+            const index = x + y * output.width;
             const channel = index * 4;
             output.data[channel + 0] = sumR;
             output.data[channel + 1] = sumG;
