@@ -61,13 +61,17 @@ class NeuralNetwork {
         return error.toArray();
     }
 
-    derivative(x) {
-        return x * (1 - x);
+    activation(x) {
+        return 1 / (1 + Math.exp(-x)); // sigmoid
+        // return Math.tanh(x); // tanh
     }
 
-    activation(x) {
-        return 1 / (1 + Math.exp(-x));
+    derivative(x) {
+        return x * (1 - x); // sigmoid
+        // return 1 - (x * x); // tanh
     }
+
+
 }
 
 if (typeof module !== 'undefined') {

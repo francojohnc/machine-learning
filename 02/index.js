@@ -41,10 +41,10 @@ function linear() {
         xsum += x;
         ysum += y;
     }
-    let xmean = xsum / points.length;//x average
-    let ymean = ysum / points.length;//y average
-    let num = 0;//numerator
-    let dem = 0;//denominator
+    let xmean = xsum / points.length; // x average
+    let ymean = ysum / points.length; // y average
+    let num = 0; // numerator
+    let dem = 0; // denominator
     for (let p of points) {
         let x = p.x;
         let y = p.y;

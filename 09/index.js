@@ -1,13 +1,13 @@
-const percent_element = document.getElementById("percent");
-const predict_element = document.getElementById("predict");
 const canvas = document.getElementById("canvas");
 canvas.width = 400;
 canvas.height = 400;
+const ctx = canvas.getContext("2d");
 
 const drawing = document.createElement('canvas');
 drawing.width = 400;
 drawing.height = 400;
-const ctx = canvas.getContext("2d");
+const percent_element = document.getElementById("percent");
+const predict_element = document.getElementById("predict");
 
 let mnist;
 let train_index = 0;
@@ -15,8 +15,8 @@ let test_index = 0;
 let total_tests = 0;
 let correct = 0;
 let isDrawing = false;
-const nn = new NeuralNetwork([784, 10]);
 const size = 784;
+const nn = new NeuralNetwork([size, 10]);
 
 load().then(data => {
     mnist = data;
@@ -108,7 +108,7 @@ const handler = function (event) {
 }
 
 function keydown(event) {
-    if (event.key === 'Backspace') {
+    if (event.code === 'Backspace') {
         drawing.getContext('2d').clearRect(0, 0, drawing.width, drawing.height);
         isDrawing = false;
     }
@@ -150,7 +150,7 @@ function guess() {
     const inputs = [];
     const image = getDrawingPixel();
     for (let i = 0; i < size; i++) {
-        inputs[i] = 255 - image.data[i * 4 + 3];
+        inputs[i] = (255 - image.data[i * 4 + 3]) / 255;
     }
     const output = softmax(nn.predict(inputs));
     predict_element.innerText = output;

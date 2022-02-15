@@ -1,8 +1,8 @@
 const files = {
-    train_images: 'train-images-idx3-ubyte',
-    train_labels: 'train-labels-idx1-ubyte',
-    test_images: 't10k-images-idx3-ubyte',
-    test_labels: 't10k-labels-idx1-ubyte',
+    train_images: '../data/mnist/train-images-idx3-ubyte',
+    train_labels: '../data/mnist/train-labels-idx1-ubyte',
+    test_images: '../data/mnist/t10k-images-idx3-ubyte',
+    test_labels: '../data/mnist/t10k-labels-idx1-ubyte',
 };
 const data = {};
 
